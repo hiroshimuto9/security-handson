@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>XSS検証用ページ</title>
+    <script src="./purify.js"></script>
   </head>
   <body>
     <h1>XSS検証用ページ</h1>
@@ -15,8 +16,12 @@
         // この実装だとXSS脆弱性を持つことになる
         // document.querySelector("#result").innerHTML = message;
         // 以下のようにテキストノードとして取り扱うことでXSSを回避
-        const textNode = document.createTextNode(message);
-        document.querySelector("#result").appendChild(textNode);
+        // const textNode = document.createTextNode(message);
+        // document.querySelector("#result").appendChild(textNode);
+
+        // DOMPurifyを利用
+        const sanitizedMessage = DOMPurify.sanitize(message);
+        document.querySelector("#result").innerHTML(sanitizedMessage);
       }
 
       const urlStr = url.searchParams.get("url");
