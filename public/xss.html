@@ -18,6 +18,12 @@
         const textNode = document.createTextNode(message);
         document.querySelector("#result").appendChild(textNode);
       }
+
+      const urlStr = url.searchParams.get("url");
+      if (urlStr !== null) {
+        const linkUrl = new URL(urlStr, url.origin);
+        document.querySelector("#link").href = linkUrl;
+      }
     </script>
   </body>
 </html>
