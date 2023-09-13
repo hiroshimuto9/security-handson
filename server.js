@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const express = require('express');
 const api = require('./routes/api')
 const app = express();
@@ -13,7 +14,9 @@ app.get('/', (req, res, next) => {
 })
 
 app.get('/csp', (req, res) => {
-  res.render('csp');
+  const nonceValue = crypto.randomBytes(16).toString('base64');
+  res.header('Content-Security-Policy', `script-src 'nonce-${nonceValue}'`);
+  res.render('csp', { nonce: nonceValue });
 });
 
 app.listen(port, () => {
