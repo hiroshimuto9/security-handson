@@ -5,9 +5,20 @@
   </head>
   <body>
     <script nonce="<%= nonce %>">
-      const script = document.createElement("script");
-      script.src = "./csp-test.js";
-      document.body.appendChild(script);
+      if (window.trustedTypes && trustedTypes.createPolicy) {
+        const policy = trustedTypes.createPolicy("script-url", {
+          createScriptURL: (str) => {
+            const url = new URL(str, location.origin);
+            if (url.origin !== location.origin) {
+              throw new Error("クロスオリジンは許可されていません。");
+            }
+            return url;
+          },
+        });
+        const script = document.createElement("script");
+        script.src = policy.createScriptURL("./csp-test.js");
+        document.body.appendChild(script);
+      }
     </script>
   </body>
 </html>
